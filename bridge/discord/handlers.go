@@ -69,9 +69,9 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 		return
 	}
 	// if using webhooks, do not relay if it's ours
-	if m.Author.Bot && b.transmitter.HasWebhook(m.Author.ID) {
-		return
-	}
+	// if m.Author.Bot && b.transmitter.HasWebhook(m.Author.ID) {
+	// 	return
+	// }
 
 	// add the url of the attachments to content
 	if len(m.Attachments) > 0 {

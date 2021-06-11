@@ -34,33 +34,33 @@ func (b *Bdiscord) getAllowedMentions() *discordgo.MessageAllowedMentions {
 }
 
 func (b *Bdiscord) getNick(user *discordgo.User, guildID string) string {
-	b.membersMutex.RLock()
-	defer b.membersMutex.RUnlock()
+	// b.membersMutex.RLock()
+	// defer b.membersMutex.RUnlock()
 
-	if member, ok := b.userMemberMap[user.ID]; ok {
-		if member.Nick != "" {
-			// Only return if nick is set.
-			return member.Nick
-		}
-		// Otherwise return username.
-		return user.Username
-	}
+	// if member, ok := b.userMemberMap[user.ID]; ok {
+	// 	if member.Nick != "" {
+	// 		// Only return if nick is set.
+	// 		return member.Nick
+	// 	}
+	// 	// Otherwise return username.
+	// 	return user.Username
+	// }
 
-	// If we didn't find nick, search for it.
-	member, err := b.c.GuildMember(guildID, user.ID)
-	if err != nil {
-		b.Log.Warnf("Failed to fetch information for member %#v on guild %#v: %s", user, guildID, err)
-		return user.Username
-	} else if member == nil {
-		b.Log.Warnf("Got no information for member %#v", user)
-		return user.Username
-	}
-	b.userMemberMap[user.ID] = member
-	b.nickMemberMap[member.User.Username] = member
-	if member.Nick != "" {
-		b.nickMemberMap[member.Nick] = member
-		return member.Nick
-	}
+	// // If we didn't find nick, search for it.
+	// member, err := b.c.GuildMember(guildID, user.ID)
+	// if err != nil {
+	// 	b.Log.Warnf("Failed to fetch information for member %#v on guild %#v: %s", user, guildID, err)
+	// 	return user.Username
+	// } else if member == nil {
+	// 	b.Log.Warnf("Got no information for member %#v", user)
+	// 	return user.Username
+	// }
+	// b.userMemberMap[user.ID] = member
+	// b.nickMemberMap[member.User.Username] = member
+	// if member.Nick != "" {
+	// 	b.nickMemberMap[member.Nick] = member
+	// 	return member.Nick
+	// }
 	return user.Username
 }
 
@@ -169,14 +169,9 @@ func (b *Bdiscord) replaceChannelMentions(text string) string {
 		channelID := match[2 : len(match)-1]
 		channelName := b.getChannelName(channelID)
 
-		// If we don't have the channel refresh our list.
+		// If we don't have the channel, return unknown
 		if channelName == "" {
-			var err error
-			b.channels, err = b.c.GuildChannels(b.guildID)
-			if err != nil {
-				return "#unknownchannel"
-			}
-			channelName = b.getChannelName(channelID)
+			return "#unknownchannel"
 		}
 		return "#" + channelName
 	}
