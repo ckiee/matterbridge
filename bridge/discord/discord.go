@@ -91,7 +91,7 @@ func (b *Bdiscord) Connect() error {
 	// Getting this guild's channel could result in a permission error
 	b.channels, err = b.c.UserChannels()
 	if err != nil {
-		return fmt.Errorf("could not get user channels", err)
+		return fmt.Errorf("could not get user channels: %s", err)
 	}
 
 	b.channelsMutex.Unlock()

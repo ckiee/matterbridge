@@ -94,16 +94,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
 	// set channel name
 	rmsg.Channel = b.getChannelName(m.ChannelID)
-
-	fromWebhook := m.WebhookID != ""
-	if !fromWebhook && !b.GetBool("UseUserName") {
-		rmsg.Username = b.getNick(m.Author, m.GuildID)
-	} else {
-		rmsg.Username = m.Author.Username
-		if !fromWebhook && b.GetBool("UseDiscriminator") {
-			rmsg.Username += "#" + m.Author.Discriminator
-		}
-	}
+	rmsg.Username = m.Author.Username
 
 	// if we have embedded content add it to text
 	if b.GetBool("ShowEmbeds") && m.Message.Embeds != nil {
@@ -118,11 +109,11 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	}
 
 	// do we have a /me action
-	var ok bool
-	rmsg.Text, ok = b.replaceAction(rmsg.Text)
-	if ok {
-		rmsg.Event = config.EventUserAction
-	}
+	// var ok bool
+	// rmsg.Text, ok = b.replaceAction(rmsg.Text)
+	// if ok {
+	// 	rmsg.Event = config.EventUserAction
+	// }
 
 	// Replace emotes
 	rmsg.Text = replaceEmotes(rmsg.Text)
