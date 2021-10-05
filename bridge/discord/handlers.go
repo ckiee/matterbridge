@@ -73,6 +73,8 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	// 	return
 	// }
 
+	b.Log.Debugf("== Receiving event %#v", m.Message)
+
 	// add the url of the attachments to content
 	if len(m.Attachments) > 0 {
 		for _, attach := range m.Attachments {
@@ -83,7 +85,6 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	rmsg := config.Message{Account: b.Account, Avatar: "https://cdn.discordapp.com/avatars/" + m.Author.ID + "/" + m.Author.Avatar + ".jpg", UserID: m.Author.ID, ID: m.ID}
 
 	if m.Content != "" {
-		b.Log.Debugf("== Receiving event %#v", m.Message)
 		m.Message.Content = b.replaceChannelMentions(m.Message.Content)
 		rmsg.Text, err = m.ContentWithMoreMentionsReplaced(b.c)
 		if err != nil {
