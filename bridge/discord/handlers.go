@@ -75,6 +75,17 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 
 	b.Log.Debugf("== Receiving event %#v", m.Message)
 
+	// https://github.com/bwmarrin/discordgo/issues/961
+	if m.Content == "" {
+		chanMsgs, err := s.ChannelMessages(m.ChannelID, 1, "", "", m.ID)
+		if err != nil {
+			log.Errorf("unable to get messages: %s", err)
+			return
+		}
+		m.Content = chanMsgs[0].Content
+		m.Attachments = chanMsgs[0].Attachments
+	}
+
 	// add the url of the attachments to content
 	if len(m.Attachments) > 0 {
 		for _, attach := range m.Attachments {
