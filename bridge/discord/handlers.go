@@ -79,7 +79,7 @@ func (b *Bdiscord) messageCreate(s *discordgo.Session, m *discordgo.MessageCreat
 	if m.Content == "" {
 		chanMsgs, err := s.ChannelMessages(m.ChannelID, 1, "", "", m.ID)
 		if err != nil {
-			log.Errorf("unable to get messages: %s", err)
+			b.Log.Errorf("unable to get messages: %s", err)
 			return
 		}
 		m.Content = chanMsgs[0].Content
